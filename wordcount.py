@@ -9,41 +9,42 @@ def read_words(filename):
     return words
 
 
-def print_top(filename):
+def make_dict(filename):
     words = read_words(filename)
-
-    w_cnt = dict()
+    new_dict = dict()
     for i in range(len(words)):
         words[i] = words[i].lower()
-        if (words[i] in w_cnt):
-            w_cnt[words[i]] += 1
+        if (words[i] in new_dict):
+            new_dict[words[i]] += 1
         else:
-            w_cnt[words[i]] = 1
+            new_dict[words[i]] = 1
+    return new_dict
+
+
+def print_top(filename):
+    w_cnt = make_dict(filename)
 
     ans = []
     for key in w_cnt:
-        ans.append([w_cnt[key], key])
+        ans.append([key, w_cnt[key]])
 
-    ans.sort(reverse=True)
-    for i in range(min(20, len(ans))):
-        print(ans[i][1], ans[i][0])
+    ans.sort(key=lambda x: x[1], reverse=True)
+
+    for word, count in ans[:20]:
+        print(word, count)
 
 
 def print_words(filename):
-    words = read_words(filename)
-    for i in range(len(words)):
-        words[i] = words[i].lower()
-    words.sort()
+    w_cnt = make_dict(filename)
 
-    cnt = 1
-    for i in range(1, len(words)):
-        if (words[i] != words[i - 1]):
-            print(words[i - 1], cnt)
-            cnt = 1
-        else:
-            cnt += 1
+    ans = []
+    for key in w_cnt:
+        ans.append([key, w_cnt[key]])
 
-    print(words[len(words) - 1], cnt)
+    ans.sort()
+
+    for word, count in ans:
+        print(word, count)
 
 
 def main():
