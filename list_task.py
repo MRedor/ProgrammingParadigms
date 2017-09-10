@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 # Remove equal adjacent elements
 #
 # Example input: [1, 2, 2, 3]
