@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 # Given a string, if its length is at least 3,
 # add 'ing' to its end.
 # Unless it already ends in 'ing', in which case
@@ -28,14 +30,9 @@ def verbing(s):
 # Example output: 'This dinner is good!'
 
 def not_bad(s):
-    not_id = len(s)
-    bad_id = len(s)
-    for i in range(len(s) - 2):
-        if s[i:i + 3] == 'not':
-            not_id = i
-        if s[i:i + 3] == 'bad':
-            bad_id = i
-    if not_id < bad_id:
+    not_id = s.find('not')
+    bad_id = s.find('bad')
+    if (not_id < bad_id and not_id > -1):
         return s[:not_id] + 'good' + s[bad_id + 3:]
     else:
         return s
@@ -62,5 +59,5 @@ def front_back(a, b):
 
 
 # print(verbing('ing'))
-# print(not_bad('This dinner is not that bad!'))
+print(not_bad('This dinner is not that bad!'))
 # print(front_back('abcde', 'xy'))
