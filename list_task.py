@@ -32,14 +32,11 @@ def linear_merge(lst1, lst2):
             newlst.append(lst2[j])
             j += 1
 
-    while i < len(lst1):
-        newlst.append(lst1[i])
-        i += 1
-    while j < len(lst2):
-        newlst.append(lst2[j])
-        j += 1
+    newlst.extend(lst1[i:])
+    newlst.extend(lst2[j:])
+
     return newlst
 
 
 # print(remove_adjacent([1, 2, 2, 3]))
-# print(linear_merge([2, 4, 6], [1, 3, 5]))
+# print(linear_merge([2, 4, 6], [1, 3, 5, 8]))
