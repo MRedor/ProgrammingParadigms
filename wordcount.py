@@ -12,22 +12,23 @@ def read_words(filename):
 def make_dict(filename):
     words = read_words(filename)
     new_dict = dict()
-    for i in range(len(words)):
-        words[i] = words[i].lower()
-        if (words[i] in new_dict):
-            new_dict[words[i]] += 1
+    for word in words:
+        word = word.lower()
+        if word in new_dict:
+            new_dict[word] += 1
         else:
-            new_dict[words[i]] = 1
+            new_dict[word] = 1
     return new_dict
 
 
-def print_top(filename):
+def make_countlist(filename):
     w_cnt = make_dict(filename)
+    ans = list(w_cnt.items())
+    return ans
 
-    ans = []
-    for key in w_cnt:
-        ans.append([key, w_cnt[key]])
 
+def print_top(filename):
+    ans = make_countlist(filename)
     ans.sort(key=lambda x: x[1], reverse=True)
 
     for word, count in ans[:20]:
@@ -35,12 +36,7 @@ def print_top(filename):
 
 
 def print_words(filename):
-    w_cnt = make_dict(filename)
-
-    ans = []
-    for key in w_cnt:
-        ans.append([key, w_cnt[key]])
-
+    ans = make_countlist(filename)
     ans.sort()
 
     for word, count in ans:
