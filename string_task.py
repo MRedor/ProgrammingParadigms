@@ -30,7 +30,7 @@ def verbing(s):
 def not_bad(s):
     not_id = s.find('not')
     bad_id = s.find('bad')
-    if (not_id < bad_id and not_id > -1):
+    if -1 < not_id < bad_id:
         return s[:not_id] + 'good' + s[bad_id + 3:]
     else:
         return s
@@ -57,5 +57,5 @@ def front_back(a, b):
 
 
 # print(verbing('ing'))
-print(not_bad('This dinner is not that bad!'))
+# print(not_bad('This dinner is not that bad!'))
 # print(front_back('abcde', 'xy'))
