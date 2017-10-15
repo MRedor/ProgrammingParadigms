@@ -100,15 +100,17 @@ class Conditional:
         self.if_false = if_false
 
     def evaluate(self, scope):
-        if (self.condtion.evaluate(scope) == 0):
+        if (self.condtion.evaluate(scope).value == 0):
             ans = None
-            for cur in if_false:
-                ans = cur.evaluate(scope)
+            if (self.if_false):
+                for cur in self.if_false:
+                    ans = cur.evaluate(scope)
             return ans
         else:
             ans = None
-            for cur in if_true:
-                ans = cur.evaluate(scope)
+            if (self.if_true):
+                for cur in self.if_true:
+                    ans = cur.evaluate(scope)
             return ans
 
 
@@ -284,17 +286,90 @@ def example():
                  [Number(5), UnaryOperation('-', Number(3))]).evaluate(scope)
 
 
-def my_tests():
+def test_scope_print_num():
     parent = Scope()
     parent['bar'] = Number(10)
     scope = Scope(parent)
-    ans = scope['bar']  # ans == Number(10)
+    ans = scope['bar']
 
     Print(ans).evaluate(scope)
     scope['bar'] = Number(20)
-    ans = scope['bar']  # ans == Number(20)
+    ans = scope['bar']
     Print(ans).evaluate(scope)
+
+
+def test_reference():
+    scope = Scope()
+    scope['x'] = Number(0)
+    assert Reference('x').evaluate(scope) == Number(0)
+
+
+def test_condition():
+    scope = Scope()
+    scope["x"] = Number(0)
+    scope["y"] = Number(1)
+    res = Conditional(BinaryOperation(Number(0), '||', Number(1)),
+                      [BinaryOperation(Number(1), '+', Number(2))],
+                      [Number(0)]).evaluate(scope)
+    assert res == Number(3)
+
+
+def test_bin_ops():
+    scope = Scope()
+    # “%”, “==”, “!=”, “<”, “>”, “<=”, “>=”, “&&”, “||”.
+    assert BinaryOperation(Number(1), '+', Number(2)
+                           ).evaluate(scope) == Number(3)
+    assert BinaryOperation(Number(1), '-', Number(2)
+                           ).evaluate(scope) == Number(-1)
+    assert BinaryOperation(Number(1), '*', Number(2)
+                           ).evaluate(scope) == Number(2)
+    assert BinaryOperation(Number(8), '/', Number(4)
+                           ).evaluate(scope) == Number(2)
+    assert BinaryOperation(Number(4), '%', Number(3)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(1), '==', Number(1)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(1), '==', Number(2)
+                           ).evaluate(scope) == Number(0)
+    assert BinaryOperation(Number(4), '!=', Number(3)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(4), '<', Number(3)
+                           ).evaluate(scope) == Number(0)
+    assert BinaryOperation(Number(4), '>', Number(3)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(4), '<=', Number(3)
+                           ).evaluate(scope) == Number(0)
+    assert BinaryOperation(Number(4), '<=', Number(4)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(4), '>=', Number(5)
+                           ).evaluate(scope) == Number(0)
+    assert BinaryOperation(Number(4), '>=', Number(4)
+                           ).evaluate(scope) == Number(1)
+    assert BinaryOperation(Number(1), '&&', Number(0)
+                           ).evaluate(scope) == Number(0)
+    assert BinaryOperation(Number(1), '||', Number(0)
+                           ).evaluate(scope) == Number(1)
+
+
+def test_un_ops():
+    scope = Scope()
+    assert UnaryOperation('-', Number(3)).evaluate(scope) == Number(-3)
+    assert UnaryOperation('!', Number(1)).evaluate(scope) == Number(0)
+
+
+def test_function():
+    scope = Scope()
+    function = Function(("x"), [Conditional(BinaryOperation(Number(0), '||', Number(1)), [
+        BinaryOperation(Number(1), '+', Number(2))], [Number(0)]).evaluate(scope)])
+    f = FunctionDefinition("my_f", function)
+    assert FunctionCall(f, [Number(1)]).evaluate(scope) == Number(3)
+
 
 if __name__ == '__main__':
     example()
-    my_tests()
+    test_scope_print_num()
+    test_bin_ops()
+    test_un_ops()
+    test_reference()
+    test_condition()
+    test_function()
