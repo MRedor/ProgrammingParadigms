@@ -208,45 +208,21 @@ class BinaryOperation:
         if (self.op == '%'):
             return Number(left % right)
         if (self.op == '=='):
-            if (left == right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left == right)
         if (self.op == '!='):
-            if (left == right):
-                return Number(0)
-            else:
-                return Number(1)
+            return Number(left != right)
         if (self.op == '<'):
-            if (left < right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left < right)
         if (self.op == '>'):
-            if (left > right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left > right)
         if (self.op == '<='):
-            if (left <= right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left <= right)
         if (self.op == '>='):
-            if (left >= right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left >= right)
         if (self.op == '&&'):
-            if (left and right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left and right)
         if (self.op == '||'):
-            if (left or right):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(left or right)
 
 
 class UnaryOperation:
@@ -262,10 +238,7 @@ class UnaryOperation:
     def evaluate(self, scope):
         x = self.expr.evaluate(scope).value
         if (self.op == '!'):
-            if (x == 0):
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(not x)
         else:
             return Number(-x)
 
