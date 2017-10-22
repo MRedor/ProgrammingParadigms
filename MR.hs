@@ -28,9 +28,9 @@ concat' [] y = y
 concat' (x:xs) y = x:(concat' xs y) 
 
 quickSort' :: Ord a => [a] -> [a]
-quickSort [] = []
-quickSort' (x:xs) = concat' (concat' (filter' (<=x) xs) [x]) (filter' (>x) xs)
+quickSort' [] = []
+quickSort' (x:xs) = concat' (concat' (quickSort'( filter' (<=x) xs )) [x]) (quickSort'(filter' (>x) xs))
 
---main = print (quickSort' [1,6,0])
+---main = print (quickSort' [3,6,0,2,1,0])
 
 
