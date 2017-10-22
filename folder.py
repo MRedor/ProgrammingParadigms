@@ -1,5 +1,4 @@
 from model import *
-from printer import *
 
 
 class ConstantFolder:
@@ -38,7 +37,7 @@ class ConstantFolder:
 
     def visitUnaryOperation(self, op):
         op.expr = op.expr.accept(self)
-        if (type(op.expr) == Number):
+        if (type(op.expr) is Number):
             return op.evaluate(Scope())
         return op
 
@@ -49,13 +48,39 @@ class ConstantFolder:
         isR = isinstance(rhs, Number)
         isL2 = isinstance(lhs, Reference)
         isR2 = isinstance(rhs, Reference)
+        if (isL2):
+            nameL = op.lhs.name
+        if (isR2):
+            nameR = op.rhs.name
         if (isL and isR):
             return BinaryOperation(lhs, op.op, rhs).evaluate(Scope())
-        if ((isL and isR) and (op.lhs.name == op.rhs.name) and (op.op == '-')):
+        if ((isL2 and isR2) and (nameL == nameR) and (op.op == '-')):
             return Number(0)
         if (op.op == '*'):
-            valL = lhs.value
-            valR = rhs.value
+            if (isL):
+                valL = lhs.value
+            if (isR):
+                valR = rhs.value
             if ((isL and valL == 0 and isR2) or (isR and valR == 0 and isL2)):
                 return Number(0)
         return op
+
+
+def testUnaryOperation():
+    folder = ConstantFolder()
+    assert Number(-1) == folder.visit(UnaryOperation('-', Number(1)))
+    assert Number(1) == folder.visit(UnaryOperation('!', Number(0)))
+
+
+def testBinaryOperation():
+    folder = ConstantFolder()
+    assert Number(0) == folder.visit(
+        BinaryOperation(Number(1), '*', Number(0)))
+    assert Number(0) == folder.visit(
+        BinaryOperation(Number(0), '*', Reference('x')))
+    assert Number(0) == folder.visit(
+        BinaryOperation(Reference('x'), '-', Reference('x')))
+
+if __name__ == "__main__":
+    testUnaryOperation()
+    testBinaryOperation()
