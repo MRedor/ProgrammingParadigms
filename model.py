@@ -3,6 +3,8 @@
 # Шаблонъ для домашнѣго задания
 # Рѣализуйте мѣтоды с raise NotImplementedError
 
+from folder import *
+
 
 class Scope:
 
@@ -49,7 +51,7 @@ class Number:
         return (self.value * 7) % (10**6 + 3)
 
     def accept(self, visitor):
-        visitor.visitNumber(self)
+        return visitor.visitNumber(self)
 
 
 class Function:
@@ -91,7 +93,7 @@ class FunctionDefinition:
         return self.function
 
     def accept(self, visitor):
-        visitor.visitFunctionDefinition(self)
+        return visitor.visitFunctionDefinition(self)
 
 
 class Conditional:
@@ -120,7 +122,7 @@ class Conditional:
             return ans
 
     def accept(self, visitor):
-        visitor.visitConditional(self)
+        return visitor.visitConditional(self)
 
 
 class Print:
@@ -135,7 +137,7 @@ class Print:
         return self.expr.evaluate(scope)
 
     def accept(self, visitor):
-        visitor.visitPrint(self)
+        return visitor.visitPrint(self)
 
 
 class Read:
@@ -155,7 +157,7 @@ class Read:
         return a
 
     def accept(self, visitor):
-        visitor.visitRead(self)
+        return visitor.visitRead(self)
 
 
 class FunctionCall:
@@ -184,7 +186,7 @@ class FunctionCall:
         return ans
 
     def accept(self, visitor):
-        visitor.visitFunctionCall(self)
+        return visitor.visitFunctionCall(self)
 
 
 class Reference:
@@ -199,7 +201,7 @@ class Reference:
         return scope[self.name]
 
     def accept(self, visitor):
-        visitor.visitReference(self)
+        return visitor.visitReference(self)
 
 
 class BinaryOperation:
@@ -246,7 +248,7 @@ class BinaryOperation:
             return Number(left or right)
 
     def accept(self, visitor):
-        visitor.visitBinaryOperation(self)
+        return visitor.visitBinaryOperation(self)
 
 
 class UnaryOperation:
@@ -267,4 +269,4 @@ class UnaryOperation:
             return Number(-x)
 
     def accept(self, visitor):
-        visitor.visitUnaryOperation(self)
+        return visitor.visitUnaryOperation(self)
