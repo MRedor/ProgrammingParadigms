@@ -4,7 +4,7 @@ import Prelude hiding (lookup)
 -- 2 extra points for a balanced tree
 
 
-data BinaryTree k v = Null | Node k v (BinaryTree k v) (BinaryTree k v) deriving Show
+data BinaryTree k v = Null | Node k v (BinaryTree k v) (BinaryTree k v) deriving (Show, Eq)
 
 -- “Ord k =>” requires, that the elements of type k are comparable
 -- Takes a key and a tree and returns Just value if the given key is present,
@@ -32,20 +32,14 @@ minV :: BinaryTree k v -> v
 minV (Node k v Null r) = v
 minV (Node k v l r) = minV l
 
-delMin :: BinaryTree k v -> BinaryTree k v
-delMin (Node k v Null r) = r
-delMin (Node k v l r) = (Node k v (delMin l) r)
-
-extractRoot :: BinaryTree k v -> BinaryTree k v
-extractRoot (Node k v l Null) = l
-extractRoot (Node k v l r) = (Node (minK r) (minV r) l (delMin r))
-
 -- Returns a new tree without the given key
 delete :: Ord k => k -> BinaryTree k v -> BinaryTree k v
 delete delK Null = Null
 delete delK (Node k v l r) | (delK < k)  = (Node k v (delete delK l) r)
                            | (delK > k)  = (Node k v l (delete delK r))
-                           | (delK == k) = (extractRoot (Node k v l r))
+                           | (delK == k) = case r of
+                                Null -> l
+                                _ -> (Node (minK r) (minV r) l (delete (minK r) r) )
 
 
 --tree1 = Null
